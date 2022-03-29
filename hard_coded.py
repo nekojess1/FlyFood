@@ -29,13 +29,17 @@ def calculate_cost(positions, allPossiblesRoutes):
         totalDistance = 0 
         for indice in range(len(possibility)):
             if (indice + 1 < len(possibility)):
-                atualLetter = positions.get(possibility[indice])
-                nextLetter = positions.get(possibility[indice + 1])
-                firstMinus = abs(atualLetter[0] - nextLetter[0])
-                secondMinus = abs(atualLetter[1] - nextLetter[1])
-                totalDistance += firstMinus + secondMinus
+                get_distance(indice,possibility)
         distances[possibility] = totalDistance          # Atribui a distância por tal rota
     return distances
+
+""" Retorna a distância entre 2 pontos """ 
+def get_distance(indice, possibility):
+    atualLetter = positions.get(possibility[indice])
+    nextLetter = positions.get(possibility[indice + 1])
+    firstSubtraction = abs(atualLetter[0] - nextLetter[0])
+    secondSubtraction = abs(atualLetter[1] - nextLetter[1])
+    return firstSubtraction + secondSubtraction
 
 """ Retorna o menor valor do dicionário """            
 def min_cost(distances):
@@ -48,6 +52,6 @@ def get_route_name(dict, index):
 file = open('arquivo.txt', 'r')
 positions = get_data()
 allPossiblesRoutes = permutation(positions)
-costs = calculate_cost(positions, allPossiblesRoutes)
-minCostDic = min_cost(costs)
-print(get_route_name(costs, minCostDic))
+allCosts = calculate_cost(positions, allPossiblesRoutes)
+minCostDic = min_cost(allCosts)
+print(get_route_name(allCosts, minCostDic))
