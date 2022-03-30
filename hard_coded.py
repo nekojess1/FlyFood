@@ -1,7 +1,7 @@
 import itertools
 
 """ Retorna um dicionário com a posição de cada letra na matriz """
-def get_data():
+def get_data(file):
     positions = {}
     lineNumber, columnNumber =  map(int, file.readline().split(' '))      # Recebe o nº de linhas e colunas da matriz
     for line in range(lineNumber):
@@ -23,15 +23,22 @@ def permutation(positions):
     return allPossiblesRoutes
 
 """ Retorna um dicionário com os custos de cada rota """
-def calculate_cost(positions, allPossiblesRoutes):
+def get_min_route(positions, allPossiblesRoutes):
     distances = {}
-    for possibility in (allPossiblesRoutes):
+    minDistance = 0
+    minDistanceRoute = "" 
+    for possibility in allPossiblesRoutes:                              # Calcula o custo de todas as rotas
         totalDistance = 0 
         for indice in range(len(possibility)):
             if (indice + 1 < len(possibility)):
-                get_distance(indice,possibility)
+                totalDistance += get_distance(indice,possibility)
+        if (totalDistance < minDistance or minDistance == 0):
+            minDistance = totalDistance
+            minDistanceRoute = possibility
         distances[possibility] = totalDistance          # Atribui a distância por tal rota
-    return distances
+    return minDistanceRoute
+
+    
 
 """ Retorna a distância entre 2 pontos """ 
 def get_distance(indice, possibility):
@@ -41,17 +48,9 @@ def get_distance(indice, possibility):
     secondSubtraction = abs(atualLetter[1] - nextLetter[1])
     return firstSubtraction + secondSubtraction
 
-""" Retorna o menor valor do dicionário """            
-def min_cost(distances):
-    return distances[min(distances, key=distances.get)]
-
-""" Retorna o primeiro nome de chave a partir de um valor """
-def get_route_name(dict, index):
-    return list(dict.keys())[list(dict.values()).index(index)]
 
 file = open('arquivo.txt', 'r')
-positions = get_data()
+positions = get_data(file)
 allPossiblesRoutes = permutation(positions)
-allCosts = calculate_cost(positions, allPossiblesRoutes)
-minCostDic = min_cost(allCosts)
-print(get_route_name(allCosts, minCostDic))
+minRoute = get_min_route(positions, allPossiblesRoutes) 
+print(minRoute)
